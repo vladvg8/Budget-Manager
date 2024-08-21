@@ -2,8 +2,8 @@ const http = require('node:http');
 const env = require('./lib/env');
 const logger = require('./lib/logger');
 const Router = require('./lib/router');
-const app = require('./lib/application');
-
+const Application = require('./lib/application');
+const app = new Application();
 
 const PORT = process.env.PORT || 9999;
 const SERVER_HOST = process.env.SERVER_HOST || 'localhost';

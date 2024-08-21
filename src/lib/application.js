@@ -4,7 +4,7 @@ const Router = require('./router');
 class Application {
     constructor() {
         this.server = http.createServer(async (req, res) => {
-            await this.handle(req, res);
+            await this.#handle(req, res);
         });
         this.middlewares = []; // [{url: string, middlewares: []}]
         this.routers = [];     // [{url: string, router: Router}]
@@ -38,7 +38,7 @@ class Application {
         this.routers.push({url: url, router: router});
     }
 
-    async handle(req, res) {
+    async #handle(req, res) {
         const {method, url } = req;
         const baseMiddlewares = this.middlewares.find((middleware => url.startsWith(middleware.url)))?.middlewares || [];
         const appRouter = this.routers.find(router => url.startsWith(router.url));
@@ -74,9 +74,13 @@ class Application {
 
     }
 
-    listen(port, server_host, backlog) {
+    listen(port, server_host, backlog = () => {}) {
         this.server.listen(port, server_host, backlog);
+    }
+
+    close(callback = (err = Error) => {}) {
+        this.server.close(callback);
     }
 }
 
-module.exports = new Application();
+module.exports = Application;
